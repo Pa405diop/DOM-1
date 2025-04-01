@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Sélection de tous les boutons plus et moins
-    let plusButtons = document.querySelectorAll(".fa-plus-circle");
-    let minusButtons = document.querySelectorAll(".fa-minus-circle");
-    let deleteButtons = document.querySelectorAll(".delete");
-    let heartIcons = document.querySelectorAll(".fa-heart");
-    
+    let btnsPlus = document.querySelectorAll(".fa-plus-circle");
+    let btnsMoins = document.querySelectorAll(".fa-minus-circle");
+    let heart=document.querySelectorAll(".fa-heart");
+    let trash=document.querySelectorAll(".fa-trash-alt");
+    let Delete=document.querySelectorAll(".delete");
     function updateTotalPrice() {
         let total = 0;
         document.querySelectorAll(".list-products .card-body").forEach(product => {
@@ -15,49 +14,64 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("Total").textContent = total/2 + " $";
     }
 
-    plusButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            let product = this.closest(".card-body");
-            let quantitySpan = product.querySelector(".quantity");
-            let quantity = parseInt(quantitySpan.textContent);
+
+    btnsPlus.forEach((btnPlus) => {//foreach permet de parcourir les éléments du tableau btnsPlus 
+        btnPlus.addEventListener("click", function () {
+            let parent = btnPlus.closest(".card-body ");
+            let qty = parent.querySelector(".quantity");
+            let tot = parent.querySelector(".total");
+            let unitPrice = parseInt(parent.querySelector(".unit-price").textContent.trim().replace("$", ""));
+            
+            let quantity = parseInt(qty.textContent);
             quantity++;
-            quantitySpan.textContent = quantity;
-            
-            let unitPrice = parseInt(product.querySelector(".unit-price").textContent.replace(" $", ""));
-            product.querySelector(".total").textContent = quantity * unitPrice;
-            
-            updateTotalPrice();
+            qty.textContent = quantity;
+            tot.textContent = quantity * unitPrice;
+            updateTotalPrice()
         });
     });
 
-    minusButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            let product = this.closest(".card-body");
-            let quantitySpan = product.querySelector(".quantity");
-            let quantity = parseInt(quantitySpan.textContent);
+    btnsMoins.forEach((btnMoins) => {
+        btnMoins.addEventListener("click", function () {
+            let parent = btnMoins.closest(".card-body");
+            let qty = parent.querySelector(".quantity");
+            let tot = parent.querySelector(".total");
+            let unitPrice = parseInt(parent.querySelector(".unit-price").textContent.trim().replace("$", ""));
+            
+            let quantity = parseInt(qty.textContent);
             if (quantity > 0) {
                 quantity--;
-                quantitySpan.textContent = quantity;
-                
-                let unitPrice = parseInt(product.querySelector(".unit-price").textContent.replace(" $", ""));
-                product.querySelector(".total").textContent = quantity * unitPrice;
-                
-                updateTotalPrice();
+                qty.textContent = quantity;
+                tot.textContent = quantity * unitPrice;
+                updateTotalPrice()
             }
         });
     });
 
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            let product = this.closest(".card-body");
-            product.remove();
-            updateTotalPrice();
+    heart.forEach((heart) => {
+        heart.addEventListener("click",function(){
+            heart.style.color = heart.style.color === "gray" ? "red" : "gray";
         });
     });
 
-    heartIcons.forEach(icon => {
-        icon.addEventListener("click", function () {
-            this.classList.toggle("text-danger"); // Change la couleur en rouge pour indiquer un favori
+    trash.forEach((trash) => {
+        trash.addEventListener("click",function(){
+            let parent = trash.closest(".card-body");
+            let qty = parent.querySelector(".quantity");
+            let tot = parent.querySelector(".total");
+            let unitPrice = parseInt(parent.querySelector(".unit-price").textContent.trim().replace("$", ""));
+            
+            let quantity = parseInt(qty.textContent);
+            if (quantity > 0) {
+                qty.textContent = 0;
+                tot.textContent = 0;
+                updateTotalPrice()
+            }
+        });
+    });
+    Delete.forEach((Delete)=>{
+        Delete.addEventListener("click",function(){
+            let parent = Delete.closest(".card-body");
+            parent.parentElement.remove();
         });
     });
 });
